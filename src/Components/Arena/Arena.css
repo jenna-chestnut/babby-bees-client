@@ -49,10 +49,6 @@
   object-fit: cover;
 }
 
-.item {
-  flex: 1;
-}
-
 .attacking-loader {
   font-size: 27px;
   margin: auto;
