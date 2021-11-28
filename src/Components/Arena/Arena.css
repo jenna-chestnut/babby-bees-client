@@ -49,15 +49,16 @@
   object-fit: cover;
 }
 
-.attacking-loader {
-  font-size: 27px;
-  margin: auto;
-  text-align: left;
+.boss-container .loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 25px;
 }
 
-.group {
-  display: flex;
-  justify-content: space-around;
+.boss-container .loading-indicator p {
+  font-weight: bold;
+  font-size: 28px;
 }
 
 .image-content .health-bar {

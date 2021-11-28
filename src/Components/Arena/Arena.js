@@ -108,9 +108,9 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
           </button>
         </div>
         {attackState === 'attacking' && (
-        <div className="loading-indicator group">
-          <div className='item'><LoadingIndicator/></div>
-          <span className='attacking-loader item'>Attacking!.. 🐝</span>
+        <div className="loading-indicator">
+          <LoadingIndicator/>
+          <p>Attacking!.. <span className='no-style-h'>🐝</span></p>
         </div>
       )}
       </div>
