@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
 body,
 html {
   margin: 0;
@@ -5,14 +7,9 @@ html {
 
 body {
   padding: 0;
-  font-family: -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+  font-family: Rubik, -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }

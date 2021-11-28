@@ -1,27 +1,36 @@
 .App {
   height: 100vh;
-  background-color: #0d1116;
+  background-color: #071b33;
   overflow: scroll;
   text-align: center;
 }
 
 .container {
   height: 100%;
-  background-color: #0d1116;
+  background-color: #071b33;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding-bottom: 20px;
 }
 
 .header-container {
   padding-top: 30px;
 }
 
-.header {
+h1 {
+  letter-spacing: 2px;;
   margin: 0;
   font-size: 50px;
   font-weight: bold;
-  color: white;
+  color: rgb(253, 255, 125);
+}
+
+.no-style-h {
+  font-family: -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    font-weight: normal;
 }
 
 .sub-text {
@@ -60,15 +69,16 @@
 .connect-wallet-button {
   background-image: linear-gradient(
     to right,
-    #ff8177 0%,
-    #ff867a 0%,
-    #ff8c7f 21%,
-    #f99185 52%,
-    #cf556c 78%,
-    #b12a5b 100%
+    #87ff77 0%,
+    #99ff7a 0%,
+    #6ec458 21%,
+    #27aa38 52%,
+    #3d9e89 78%,
+    #28659e 100%
   );
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
+  margin-top: 5px;
 }
 
 .mint-button {
@@ -89,10 +99,12 @@
 }
 
 .footer-container {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 30px;
+  padding: 30px;
+  background-color: #0a223f;
 }
 
 .twitter-logo {
