@@ -7,6 +7,7 @@ import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 import babbyBees from './utils/BabbyBees.json';
 import Arena from './Components/Arena/Arena';
 import LoadingIndicator from './Components/LoadingIndicator/LoadingIndicator';
+import AlertBanner from './Components/AlertBanner/AlertBanner';
 
 // Constants
 const JENNA_TWITTER = 'https://twitter.com/jennabot5000'
@@ -17,31 +18,37 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [alert, setAlert] = useState({active: null});
 
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
 
     if (!ethereum) {
-      console.log('Make sure you have MetaMask!')
+      setAlert({
+        message: 'Make sure you have MetaMask!',
+        type: 'error',
+        active: true
+      });
       setIsLoading(false);
       return;
-    } else {
-      console.log('We have the etherum object ', ethereum)
     }
 
     const accounts = await ethereum.request({method: 'eth_accounts'});
 
     if (accounts.length !== 0) {
       const account = accounts[0];
-      console.log('Found an authorized account: ', account);
       setCurrentAccount(account);
     } else {
-      console.log('No authorized account found');
       setIsLoading(false);
     }
+
     } catch (error) {
-      console.log(error);
+      setAlert({
+        message: error.message,
+        type: 'error',
+        active: true
+      });
     }
   };
 
@@ -64,9 +71,9 @@ const App = () => {
         </button>
     </div>
     } else if (currentAccount && !characterNFT) {
-      return <SelectCharacter setCharacterNFT={setCharacterNFT} />
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} setAlert={setAlert}/>
     } else if (currentAccount && characterNFT) {
-      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />;
+      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} setAlert={setAlert} />;
     }
   }
 
@@ -75,7 +82,11 @@ const App = () => {
       const { ethereum } = window;
 
       if (!ethereum) {
-        alert('Get MetaMask!');
+        setAlert({
+          message: 'Get MetaMask!',
+          type: 'error',
+          active: true
+        });
         return;
       }
 
@@ -83,10 +94,13 @@ const App = () => {
         method: 'eth_requestAccounts'
       })
 
-      console.log('Connect ', accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      console.log(error);
+      setAlert({
+        message: error.message,
+        type: 'error',
+        active: true
+      });
     }
   }
 
@@ -97,8 +111,6 @@ const App = () => {
 
   useEffect(() => {
     const fetchNFTMetadata = async () => {
-      console.log('Checking for Character NFT on address:', currentAccount);
-
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const gameContract = new ethers.Contract(
@@ -109,17 +121,13 @@ const App = () => {
 
       const txn = await gameContract.checkIsUserHasNFT();
       if (txn.name) {
-        console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(txn));
-      } else {
-        console.log('No character NFT found');
       }
 
       setIsLoading(false);
     };
 
     if (currentAccount) {
-      console.log('CurrentAccount: ', currentAccount);
       fetchNFTMetadata();
     }
   }, [currentAccount])
@@ -127,6 +135,7 @@ const App = () => {
   return (
     <div className="App">
       <div className="container">
+        {alert.active && <AlertBanner type={alert.type} message={alert.message} setAlert={setAlert}/>}
         <div className="header-container">
           <h1>
             <span className='no-style-h'>{' 🍯 '}</span> 

@@ -1,0 +1,55 @@
+.alert-banner {
+  position: absolute;
+  top: 40px;
+  width: 300px;
+  margin: auto;
+  margin-top: 5px;
+  padding: 15px;
+  border-radius: 15px;
+  font-weight: bold;
+  left: 0;
+  right: 0;
+}
+
+.error {
+  background-image: linear-gradient(
+    to right,
+    #c40000 0%,
+    #da5b07 0%,
+    #ffe600 21%,
+    #aa2727 52%,
+    #9e3d81 78%,
+    #9e2828 100%
+  );
+  animation: gradient-animation 4s ease infinite;
+  background-size: 200% 200%;
+}
+
+.success {
+  background-image: linear-gradient(
+    to right,
+    #87ff77 0%,
+    #99ff7a 0%,
+    #6ec458 21%,
+    #27aa38 52%,
+    #3d9e89 78%,
+    #28659e 100%
+  );
+  animation: gradient-animation 4s ease infinite;
+  background-size: 200% 200%;
+}
+
+.alert-banner button {
+  border: none;
+  background: none;
+  position: absolute;
+  padding: 5px;
+  right: 12px;
+  font-weight: bold;
+  font-size: 20px;
+  top: 0;
+}
+
+.alert-banner button:hover {
+  color: white;
+}

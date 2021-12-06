@@ -5,7 +5,7 @@ import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import myEpicGame from '../../utils/BabbyBees.json';
 import LoadingIndicator from '../LoadingIndicator/LoadingIndicator';
 
-const SelectCharacter = ({ setCharacterNFT }) => {
+const SelectCharacter = ({ setCharacterNFT, setAlert }) => {
   const [characters, setCharacters] = useState([]);
   const [gameContract, setGameContract] = useState(null);
   const [mintingCharacter, setMintingCharacter] = useState(false);
@@ -14,14 +14,23 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     try {
       if (gameContract) {
         setMintingCharacter(true);
-        console.log('Minting character in progress...');
+        setAlert({
+          message: 'Minting character in progress...',
+          type: 'success',
+          active: true
+        });
         const mintTxn = await gameContract.mintCharacterNFT(characterId);
         await mintTxn.wait();
-        console.log('mintTxn:', mintTxn);
+        setAlert({active: false});
         setMintingCharacter(false);
       }
     } catch (error) {
-      console.warn('MintCharacterAction Error:', error);
+      console.error('MintCharacterAction Error:', error);
+      setAlert({
+        message: 'Error Minting Character: ' + error.message,
+        type: 'error',
+        active: true
+      });
       setMintingCharacter(false);
     }
   };
@@ -40,36 +49,45 @@ const SelectCharacter = ({ setCharacterNFT }) => {
 
       setGameContract(gameContract);
     } else {
-      console.log('Ethereum object not found');
+      setAlert({
+        message: 'Ethereum object not found. Make sure you have MetaMask!',
+        type: 'error',
+        active: true
+      });
     }
-  }, []);
+  }, [setAlert]);
 
   useEffect(() => {
     const getCharacters = async () => {
       try {
-        console.log('Getting contract characters to mint');
+        setAlert({
+          message: 'Getting contract characters to mint...',
+          type: 'success',
+          active: true
+        });
   
         const charactersTxn = await gameContract.getAllDefaultCharacters();
-        console.log('charactersTxn:', charactersTxn);
   
         const characters = charactersTxn.map((characterData) =>
           transformCharacterData(characterData)
         );
 
+        setAlert({ active: false });
         setCharacters(characters);
+
       } catch (error) {
         console.error('Something went wrong fetching characters:', error);
+        setAlert({
+          message: 'Error Fetching Characters: ' + error.message,
+          type: 'error',
+          active: true
+        });
       }
     };
 
     const onCharacterMint = async (sender, tokenId, characterIndex) => {
-      console.log(
-        `CharacterNFTMinted - sender: ${sender} tokenId: ${tokenId.toNumber()} characterIndex: ${characterIndex.toNumber()}`
-      );
-
       if (gameContract) {
         const characterNFT = characters[characterIndex.toNumber()];
-        console.log('CharacterNFT: ', characterNFT);
         setCharacterNFT(characterNFT);
       }
 
@@ -88,7 +106,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         gameContract.off('CharacterNFTMinted', onCharacterMint);
       }
     };
-  }, [gameContract, characters, setCharacterNFT]);
+  }, [gameContract, characters, setCharacterNFT, setAlert]);
 
   const renderCharacters = () =>
   characters.map((character, index) => (

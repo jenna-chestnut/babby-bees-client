@@ -64,6 +64,7 @@ h1 {
 
 .connect-wallet-container img {
   padding-bottom: 20px;
+  width: 100%;
 }
 
 .connect-wallet-button {

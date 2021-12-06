@@ -4,8 +4,9 @@ import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import myEpicGame from '../../utils/BabbyBees.json';
 import './Arena.css';
 import LoadingIndicator from '../LoadingIndicator/LoadingIndicator';
+import ripCharacter from '../../assets/RIP.gif';
 
-const Arena = ({ characterNFT, setCharacterNFT }) => {
+const Arena = ({ characterNFT, setCharacterNFT, setAlert }) => {
   const [gameContract, setGameContract] = useState(null);
   const [boss, setBoss] = useState(null);
   const [attackState, setAttackState] = useState('');
@@ -14,15 +15,12 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
   useEffect(() => {
     const fetchBoss = async () => {
       const bossTxn = await gameContract.getBossBear();
-      console.log('Boss: ', bossTxn);
       setBoss(transformCharacterData(bossTxn));
     }
 
     const onAttackComplete = (newBossHp, newPlayerHp) => {
       const bossHp = newBossHp.toNumber();
       const playerHp = newPlayerHp.toNumber();
-
-      console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
 
       setBoss((prevState) => {
           return { ...prevState, hp: bossHp };
@@ -37,7 +35,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
       fetchBoss();
       gameContract.on('AttackComplete', onAttackComplete);
     }
-  }, [gameContract, setCharacterNFT])
+  }, [gameContract, setCharacterNFT, setAlert])
 
   useEffect(() => {
     const { ethereum } = window;
@@ -53,18 +51,20 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
 
       setGameContract(gameContract);
     } else {
-      console.log('Ethereum object not found');
+      setAlert({
+        message: 'Ethereum object not found. Make sure you have MetaMask!',
+        type: 'error',
+        active: true
+      });
     }
-  }, []);
+  }, [setAlert]);
 
   const runAttackAction = async () => {
     try {
       if (gameContract) {
         setAttackState('attacking');
-        console.log('Attacking boss...');
         const attackTxn = await gameContract.attackBoss();
         await attackTxn.wait();
-        console.log('attackTxn:', attackTxn);
         setAttackState('hit');
 
         setShowToast(true);
@@ -73,7 +73,11 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
         }, 5000);
       }
     } catch (error) {
-      console.error('Error attacking boss:', error);
+      setAlert({
+        message: 'Error attacking boss: ' + error.message,
+        type: 'error',
+        active: true
+      });
       setAttackState('');
     }
   };
@@ -119,12 +123,14 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     {characterNFT && (
       <div className="players-container">
         <div className="player-container">
-          <h2>You're our only hope!</h2>
+          <h2>{characterNFT.hp > 0 
+                  ? "You're our only hope!" : "You tried your best!"}</h2>
           <div className="player">
             <div className="image-content">
               <h2>{characterNFT.name}</h2>
               <img
-                src={characterNFT.imageURI}
+                src={characterNFT.hp > 0 
+                  ? characterNFT.imageURI : ripCharacter}
                 alt={`Character ${characterNFT.name}`}
               />
               <div className="health-bar">
