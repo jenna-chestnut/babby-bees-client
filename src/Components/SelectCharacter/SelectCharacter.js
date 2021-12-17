@@ -27,7 +27,7 @@ const SelectCharacter = ({ setCharacterNFT, setAlert }) => {
     } catch (error) {
       console.error('MintCharacterAction Error:', error);
       setAlert({
-        message: 'Error Minting Character: ' + error.message,
+        message: 'Error Minting Character: ' + error.error.message.substring(27),
         type: 'error',
         active: true
       });
@@ -78,7 +78,7 @@ const SelectCharacter = ({ setCharacterNFT, setAlert }) => {
       } catch (error) {
         console.error('Something went wrong fetching characters:', error);
         setAlert({
-          message: 'Error Fetching Characters: ' + error.message,
+          message: 'Error Fetching Characters: ' + error.error.message.substring(27),
           type: 'error',
           active: true
         });

@@ -8,6 +8,7 @@ import babbyBees from './utils/BabbyBees.json';
 import Arena from './Components/Arena/Arena';
 import LoadingIndicator from './Components/LoadingIndicator/LoadingIndicator';
 import AlertBanner from './Components/AlertBanner/AlertBanner';
+import ReviveBee from './Components/ReviveBee/ReviveBee';
 
 // Constants
 const JENNA_TWITTER = 'https://twitter.com/jennabot5000'
@@ -18,6 +19,7 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isReviving, setReviving] = useState(false);
   const [alert, setAlert] = useState({active: null});
 
   const checkIfWalletIsConnected = async () => {
@@ -45,7 +47,7 @@ const App = () => {
 
     } catch (error) {
       setAlert({
-        message: error.message,
+        message: error.error.message.substring(27),
         type: 'error',
         active: true
       });
@@ -68,12 +70,16 @@ const App = () => {
       onClick={connectWalletAction}
       >
         Connect Wallet to Get Started
-        </button>
+      </button>
     </div>
-    } else if (currentAccount && !characterNFT) {
-      return <SelectCharacter setCharacterNFT={setCharacterNFT} setAlert={setAlert}/>
+    }
+    else if (isReviving) {
+      return <ReviveBee setAlert={setAlert} setReviving={setReviving}/>
+    }
+    else if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} setAlert={setAlert} revivingBee={setReviving}/>
     } else if (currentAccount && characterNFT) {
-      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} setAlert={setAlert} />;
+      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} setAlert={setAlert} revivingBee={setReviving} />;
     }
   }
 
@@ -97,7 +103,7 @@ const App = () => {
       setCurrentAccount(accounts[0]);
     } catch (error) {
       setAlert({
-        message: error.message,
+        message: error.error.message.substring(27),
         type: 'error',
         active: true
       });
@@ -119,7 +125,7 @@ const App = () => {
         signer
       );
 
-      const txn = await gameContract.checkIsUserHasNFT();
+      const txn = await gameContract.checkIfUserHasNFT();
       if (txn.name) {
         setCharacterNFT(transformCharacterData(txn));
       }
@@ -137,11 +143,15 @@ const App = () => {
       <div className="container">
         {alert.active && <AlertBanner type={alert.type} message={alert.message} setAlert={setAlert}/>}
         <div className="header-container">
+          <header>
           <h1>
             <span className='no-style-h'>{' 🍯 '}</span> 
             Babby Bees 
             <span className='no-style-h'>{' 🐝 '}</span>
           </h1>
+          {currentAccount && !isReviving && <button className="cta-button revive-button" onClick={() => setReviving(true)}>Revive A Bee</button>}
+          {currentAccount && isReviving && <button className="cta-button arena-button" onClick={() => setReviving(false)}>Return to Arena</button>}
+          </header>
           <p className="sub-text">Team up to defeat the Big Bad Bear Boss!</p>
           {renderContent()}
         </div>

@@ -74,7 +74,7 @@ const Arena = ({ characterNFT, setCharacterNFT, setAlert }) => {
       }
     } catch (error) {
       setAlert({
-        message: 'Error attacking boss: ' + error.message,
+        message: 'Error attacking boss: ' + error.error.message.substring(27) || "",
         type: 'error',
         active: true
       });

@@ -55,6 +55,42 @@ h1 {
   color: white;
 }
 
+.revive-button {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  background-image: linear-gradient(
+    to right,
+    #87ff77 0%,
+    #99ff7a 0%,
+    #6ec458 21%,
+    #27aa38 52%,
+    #3d9e89 78%,
+    #28659e 100%
+  );
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin: 5px;
+}
+
+.arena-button {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  background-image: linear-gradient(
+    to right,
+    #c40000 0%,
+    #da5b07 0%,
+    #bd4500 21%,
+    #aa2727 52%,
+    #9e3d81 78%,
+    #9e2828 100%
+  );
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin: 5px;
+}
+
 .connect-wallet-container {
   display: flex;
   flex-direction: column;
